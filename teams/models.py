@@ -4,7 +4,7 @@ from django.db import models
 
 
 class TeamModel(models.Model):
-    name = models.CharField(max_length=200)
-    base = models.CharField(max_length=200)
-    team_principal = models.CharField(max_length=200)
-    championship_won = models.IntegerField(default=0)
+    name = models.CharField(max_length=200, blank=True)
+    base = models.CharField(max_length=200, blank=True)
+    team_principal = models.CharField(max_length=200, blank=True)
+    championship_won = models.IntegerField(default=0, blank=True)
