@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,9 +39,28 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'teams',
-    'users'
+    'users',
+    'drivers'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [ # specifies the default authentication classes that DRF will use to authenticate requests.
+        'rest_framework_simplejwt.authentication.JWTAuthentication' # Responsible for decoding your token
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated' # makes all my urls or endpoint protected in such a way that it needs a token to access it.
+    ]
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1440), # Set expiration for access token
+    'ALGORITHM': 'HS256', # The algorithm used to sign the token.
+    'SIGNING_KEY': SECRET_KEY, # Your Django secret key to sign the token
+    'AUTH_HEADER_TYPES': ('Bearer',) # the type of authorization header
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

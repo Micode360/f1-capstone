@@ -3,18 +3,23 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import TeamSerializer
 from .models import TeamModel
+from .permissions import IsAdminOrReadOnly
 
 
 # Create your views here.
 class TeamViews(APIView):
+    permission_classes = [IsAdminOrReadOnly]
+
     def get(self, request):
         teams = TeamModel.objects.filter(name__icontains= "")
         serializer = TeamSerializer(teams, many=True)
         return Response({"message": "Teams get request successful", "teams": serializer.data}, status=status.HTTP_200_OK)
     
     def post(self, request):
-        incoming_data = request.data
-        serializer = TeamSerializer(data=incoming_data)
+        data_copy = request.data.copy()
+        data_copy['user'] = request.user.id
+
+        serializer = TeamSerializer(data=data_copy)
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "Teams post request successful"}, status=status.HTTP_200_OK)
